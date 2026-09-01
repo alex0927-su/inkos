@@ -95,12 +95,12 @@ export async function launchStudioWorkbench(root, port) {
         : `http://localhost:${port}`;
     const launch = await resolveStudioLaunch(root);
     if (!launch) {
-        logError("InkOS Studio not found. If you cloned the repo, run:\n" +
+        logError("云溪 Studio not found. If you cloned the repo, run:\n" +
             "  cd packages/studio && pnpm install && pnpm build\n" +
             "Then run 'inkos studio' from the project root.");
         process.exit(1);
     }
-    log(`Starting InkOS Studio on ${url}`);
+    log(`Starting 云溪 Studio on ${url}`);
     const child = spawn(launch.command, launch.args, {
         cwd: root,
         stdio: "inherit",
@@ -139,7 +139,7 @@ export async function launchStudioEntry(root, port, hooks = {}) {
 }
 export function createStudioCommand(hooks = {}) {
     return new Command("studio")
-        .description("Start InkOS Studio web workbench")
+        .description("Start 云溪 Studio web workbench")
         .option("-p, --port <port>", "Server port", "4567")
         .action(async (opts) => {
         const root = findProjectRoot();
