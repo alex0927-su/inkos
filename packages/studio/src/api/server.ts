@@ -1091,7 +1091,7 @@ function formatAgentFailure(
   if (kind === "internal") {
     return {
       code: "AGENT_INTERNAL_ERROR",
-      message: pick(lang, `InkOS 内部流程错误：${message}`, `InkOS internal pipeline error: ${message}`),
+      message: pick(lang, `云溪 内部流程错误：${message}`, `云溪 internal pipeline error: ${message}`),
       status: 500,
     };
   }
@@ -6648,6 +6648,6 @@ export async function startStudioServer(
     }
   }
 
-  console.log(`InkOS Studio running on http://localhost:${port}`);
+  console.log(`云溪 Studio running on http://localhost:${port}`);
   serve({ fetch: app.fetch, port });
 }

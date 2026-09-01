@@ -291,9 +291,9 @@ export function Sidebar({ nav, activePage, sse, t }: {
           onClick={nav.toDashboard}
           className="group flex items-center gap-3 hover:opacity-80 transition-all duration-300"
         >
-          <InkosLogo className="w-11 h-11 shrink-0 group-hover:scale-105 transition-transform" />
+          <InkosLogo className="w-12 h-12 shrink-0 group-hover:scale-105 transition-transform" />
           <div className="flex flex-col">
-            <span className="font-serif text-[27px] leading-none italic font-medium">InkOS</span>
+            <span className="font-serif text-[27px] leading-none italic font-medium">云溪</span>
             <span className="text-[13px] uppercase tracking-[0.22em] text-muted-foreground font-bold mt-1.5">Studio</span>
           </div>
         </button>
