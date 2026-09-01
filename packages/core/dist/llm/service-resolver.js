@@ -1,0 +1,62 @@
+import { getModel } from "@mariozechner/pi-ai";
+import { resolveServicePiProvider, resolveServicePreset } from "./service-presets.js";
+import { getServiceApiKey } from "./secrets.js";
+import { getEndpoint } from "./providers/index.js";
+import { isApiKeyOptionalForEndpoint } from "../utils/llm-endpoint-auth.js";
+function resolveProviderCompat(provider, baseUrl) {
+    const compat = {
+        ...(provider?.compat ?? {}),
+        ...(baseUrl.includes("generativelanguage.googleapis.com") ? { supportsStore: false } : {}),
+    };
+    return Object.keys(compat).length > 0 ? compat : undefined;
+}
+export async function resolveServiceModel(service, modelId, projectRoot, customBaseUrl, customApiFormat) {
+    // Determine pi-ai provider
+    const baseService = service.startsWith("custom:") ? "custom" : service;
+    const preset = resolveServicePreset(baseService);
+    const endpoint = getEndpoint(baseService);
+    const piProvider = baseService === "ollama" ? "ollama" : resolveServicePiProvider(baseService) ?? "openai";
+    const apiType = service.startsWith("custom:")
+        ? (customApiFormat === "responses" ? "openai-responses" : "openai-completions")
+        : (preset?.api ?? "openai-completions");
+    const configuredBaseUrl = customBaseUrl ?? preset?.baseUrl ?? "";
+    const endpointModel = baseService === "minimax"
+        ? endpoint?.models.find((model) => model.id === modelId || model.deploymentName === modelId)
+        : undefined;
+    // Get pi-ai Model — may return undefined for model IDs not in the built-in registry
+    const piModel = getModel(piProvider, modelId);
+    const effectiveBaseUrl = configuredBaseUrl || piModel?.baseUrl || "";
+    const compat = apiType === "openai-completions"
+        ? resolveProviderCompat(endpoint, effectiveBaseUrl)
+        : undefined;
+    if (!effectiveBaseUrl) {
+        throw new Error(`Cannot resolve model "${modelId}" for service "${service}": no baseUrl available.`);
+    }
+    // Resolve API key after baseUrl/provider are known so local/self-hosted endpoints
+    // such as Ollama can be used without forcing a fake secret.
+    const apiKey = await getServiceApiKey(projectRoot, service);
+    if (!apiKey && !isApiKeyOptionalForEndpoint({ provider: preset?.providerFamily, baseUrl: effectiveBaseUrl })) {
+        throw new Error(`API key not found for service "${service}". Add it in .inkos/secrets.json or set the environment variable.`);
+    }
+    const model = {
+        id: modelId,
+        name: piModel?.name ?? modelId,
+        api: apiType,
+        provider: piProvider,
+        baseUrl: effectiveBaseUrl,
+        reasoning: piModel?.reasoning ?? false,
+        input: piModel?.input ?? ["text"],
+        cost: piModel?.cost ?? { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+        contextWindow: endpointModel?.contextWindowTokens ?? piModel?.contextWindow ?? 0,
+        maxTokens: endpointModel?.maxOutput ?? piModel?.maxTokens ?? 16384,
+        ...(compat ? { compat: compat } : {}),
+    };
+    return {
+        model,
+        apiKey: apiKey ?? "",
+        writingTemperature: preset?.writingTemperature,
+        temperatureRange: preset?.temperatureRange,
+        temperatureHint: preset?.temperatureHint,
+    };
+}
+//# sourceMappingURL=service-resolver.js.map

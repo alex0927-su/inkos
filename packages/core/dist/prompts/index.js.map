@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../src/prompts/index.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,eAAe,EAAE,oBAAoB,EAAsB,MAAM,sBAAsB,CAAC;AACjG,OAAO,EACL,6BAA6B,EAC7B,wBAAwB,EACxB,gBAAgB,EAChB,sBAAsB,EACtB,kBAAkB,EAClB,oBAAoB,EACpB,kBAAkB,GAInB,MAAM,kBAAkB,CAAC;AAC1B,OAAO,EACL,wBAAwB,GAEzB,MAAM,YAAY,CAAC;AACpB,cAAc,oBAAoB,CAAC"}

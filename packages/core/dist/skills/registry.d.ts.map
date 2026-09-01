@@ -1,0 +1,1 @@
+{"version":3,"file":"registry.d.ts","sourceRoot":"","sources":["../../src/skills/registry.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EACV,UAAU,EACV,aAAa,EAGd,MAAM,YAAY,CAAC;AAEpB,MAAM,WAAW,0BAA0B;IACzC,QAAQ,CAAC,MAAM,CAAC,EAAE,aAAa,CAAC,UAAU,CAAC,CAAC;CAC7C;AAED,wBAAgB,mBAAmB,CAAC,OAAO,GAAE,0BAA+B,GAAG,aAAa,CA0C3F"}

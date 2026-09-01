@@ -1,0 +1,1 @@
+{"version":3,"file":"newapi.js","sourceRoot":"","sources":["../../../../src/llm/providers/endpoints/newapi.ts"],"names":[],"mappings":"AAQA;;;;GAIG;AACH,MAAM,CAAC,MAAM,MAAM,GAAkB;IACnC,EAAE,EAAE,QAAQ;IACZ,KAAK,EAAE,gBAAgB;IACvB,KAAK,EAAE,YAAY;IACnB,GAAG,EAAE,oBAAoB;IACzB,OAAO,EAAE,EAAE;IACX,MAAM,EAAE,EAAE;CACX,CAAC"}

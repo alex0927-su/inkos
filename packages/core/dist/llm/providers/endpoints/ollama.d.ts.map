@@ -1,0 +1,1 @@
+{"version":3,"file":"ollama.d.ts","sourceRoot":"","sources":["../../../../src/llm/providers/endpoints/ollama.ts"],"names":[],"mappings":"AAAA;;;;;;;;GAQG;AACH,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,aAAa,CAAC;AAEjD,eAAO,MAAM,MAAM,EAAE,aA6DpB,CAAC"}
