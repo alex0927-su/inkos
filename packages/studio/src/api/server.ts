@@ -6612,7 +6612,7 @@ export async function startStudioServer(
   // Serve frontend static files — single process for API + frontend
   if (options?.staticDir) {
     const { readFile: readFileFs } = await import("node:fs/promises");
-    const { join: joinPath } = await import("node:path");
+    const { join: joinPath, basename } = await import("node:path");
     const { existsSync } = await import("node:fs");
 
     // Serve static assets (js, css, etc.)
@@ -6634,6 +6634,40 @@ export async function startStudioServer(
         });
       } catch {
         return c.notFound();
+      }
+    });
+
+    // Serve root-level static files (favicon, brand logo, etc.) referenced by
+    // index.html / components as "/<file>" — previously these fell through to the
+    // SPA fallback and browsers received HTML for <img>, breaking the image.
+    const rootStaticTypes: Record<string, string> = {
+      svg: "image/svg+xml",
+      png: "image/png",
+      ico: "image/x-icon",
+      webp: "image/webp",
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      gif: "image/gif",
+      json: "application/json",
+      txt: "text/plain; charset=utf-8",
+    };
+    app.get("/*", async (c, next) => {
+      const reqPath = c.req.path;
+      // Only single-segment root paths (e.g. "/favicon.svg"); never sub-paths
+      if (reqPath === "/" || reqPath.indexOf("/", 1) !== -1) return await next();
+      const ext = reqPath.split(".").pop()?.toLowerCase() ?? "";
+      const contentType = rootStaticTypes[ext];
+      if (!contentType) return await next();
+      const fileName = reqPath.slice(1);
+      // Block traversal: allow plain basenames only, never dotfiles
+      if (!fileName || fileName !== basename(fileName) || fileName.startsWith(".")) {
+        return await next();
+      }
+      try {
+        const content = await readFileFs(joinPath(options.staticDir!, fileName));
+        return new Response(content, { headers: { "Content-Type": contentType } });
+      } catch {
+        return await next();
       }
     });
 
